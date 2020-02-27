@@ -36,7 +36,6 @@ def find_general_keyframe():
 	cap = cv2.VideoCapture(video_path)
 
 	suc, frame = cap.read()
-	images = {}
 	m = {}
 	while suc:
 		suc, curr_frame = cap.read()
@@ -55,30 +54,33 @@ def find_general_keyframe():
 							NotInclude = False
 					if NotInclude:
 						images[s] = curr_frame
-						ret.add((s,d))
+						ret[s] = diff
 					break
 			m[s] = m.get(s,[])
 			m[s].append(curr_frame)
 
 # find SURF keypoint for an images
-def find_SURF_keypoint(image.threshold = 400):
+def find_SURF_keypoint(image,threshold = 4000):
 	surf = cv2.SURF(threshold)
 	kp, des = surf.detectAndCompute(img,None)
+	img2 = cv2.drawKeypoints(img,kp,None,(255,0,0),4)
+	plt.imshow(img2),plt.show()
 	return kp,des
 
 # find the general keyframe based on picture/image of a suject
-def find_keyframe_with_subject(ret):
+def find_keyframe_with_subject():
 	pass
 
 if __name__ == '__main__':
-	ret = set()
+	ret = {}
+	images = {}
 	video_path = sys.argv[1]
 	threshold = float(sys.argv[2])
 	timeframe = int(sys.argv[3])
-	number_of_keyframe = 4 if not sys.argv[4] else sys.argv[4]
-
-	find_general_keyframe(ret)
-	for i,_ in sorted(ret, key = lambda x: x[1])[:number_of_keyframe]:
+	number_of_keyframe = sys.argv[4]
+	find_SURF_keypoint("test_img.png")
+	#find_general_keyframe()
+	for i,_ in sorted(ret.items(), key = lambda x: x[1] )[:4]:
 		cv2.imwrite('images'+str(i)+'.png',images[i])
 		get_short_video(i)
 # for i,v in enumerate(images):
