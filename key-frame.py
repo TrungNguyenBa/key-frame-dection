@@ -1,17 +1,12 @@
 import sys 
 import cv2
 import numpy as np
+from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 
 video_path = sys.argv[1]
 threshold = float(sys.argv[2])
 timeframe = int(sys.argv[3])
-
-# def absolute_diff(f1,f2):
-# 	diff = cv2.absdiff(f1,f2)
-# 	non_zero_count = np.count_nonzero(diff)
-# 	if non_zero_count > threshold:
-# 		return True
-# 	return False
+number_of_keyframe = 4 if not sys.argv[4] else sys.argv[4]
 
 def histogram_diff(f1,f2):
 	h_bins = 50
@@ -30,6 +25,12 @@ def histogram_diff(f1,f2):
 		return True
 	return False
 
+def get_short_video(keyframe_time,interval=3):
+	start_time = keyframe_time-interval
+	end_time = keyframe_time+interval
+	ffmpeg_extract_subclip(video_path, start_time, end_time, targetname="test_keyframe{}.mp4".format(keyframe_time))
+
+
 compare = histogram_diff
 
 
@@ -37,7 +38,7 @@ cap = cv2.VideoCapture(video_path)
 
 suc, frame = cap.read()
 ret = set()
-images = []
+images = {}
 m = {}
 while suc:
 	suc, curr_frame = cap.read()
@@ -55,13 +56,15 @@ while suc:
 					if s - i in ret:
 						NotInclude = False
 				if NotInclude:
-					images.append(curr_frame)
-					ret.add(s)
+					images[s] = curr_frame
+					ret.add((s,d))
 				break
 		m[s] = m.get(s,[])
 		m[s].append(curr_frame)
-print(len(images))
-print(sorted(ret))
+
+for i,_ in sorted(ret, key = lambda x: x[1])[:number_of_keyframe]:
+	cv2.imwrite('images'+str(i)+'.png',images[i])
+	get_short_video(i)
 # for i,v in enumerate(images):
-# 	cv2.imwrite('images'+str(i)+'.png',v)
+ 	
 
