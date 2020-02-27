@@ -33,5 +33,11 @@ python3 key-frame.py <video-path> <threshold> <time-frame>
 * Update the documentation
 * Tested the program on some new datasets
 
+## Week 6 (5):
+* Improve the current process of collecting dataframe, allow user to define the number of top short videos/keyframes.
+* Update documentation
+* Add SURF features into the program to detect keyframe with subject image
+* Presnetation slides: https://docs.google.com/presentation/d/1OzZ4x7MI0MlgbxFo0Z6scTR2Pg6ourUJZbsoYcGzR2E/edit#slide=id.p
+
 
 
