@@ -10,7 +10,29 @@ This is project of UMASS-COMPSCI 696E
 * moviepy
 
 ## Run program
-python3 key-frame.py <video-path> <threshold> <time-frame>
+### General key-frame detection
+usage: key-frame.py [-h] [--video_path VIDEO_PATH] [--threshold THRESHOLD]
+                    [--time_interval TIME_INTERVAL]
+                    [--number-of-frames NUMBER_OF_FRAMES]
+
+Key-frame detection program for extracting and retrieving important frames
+afrom long-duration videos.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --video_path VIDEO_PATH
+                        Path to the video.
+  --threshold THRESHOLD
+                        The threshold for frames comparations. The value
+                        should be in range 0.99-0.9999
+  --time_interval TIME_INTERVAL
+                        The time interval for generating the short videos from
+                        collected keyframe.
+  --number-of-frames NUMBER_OF_FRAMES
+                        The numbers of keyframes to collect.
+
+### Subject-oriented key-frame detection
+
 
 # Progress Update
 ## Week 2 (1):

@@ -1,4 +1,4 @@
-import sys 
+import argparse
 import cv2
 import numpy as np
 from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
@@ -59,30 +59,22 @@ def find_general_keyframe():
 			m[s] = m.get(s,[])
 			m[s].append(curr_frame)
 
-# find SURF keypoint for an images
-def find_SURF_keypoint(image,threshold = 4000):
-	surf = cv2.SURF(threshold)
-	kp, des = surf.detectAndCompute(img,None)
-	img2 = cv2.drawKeypoints(img,kp,None,(255,0,0),4)
-	plt.imshow(img2),plt.show()
-	return kp,des
-
-# find the general keyframe based on picture/image of a suject
-def find_keyframe_with_subject():
-	pass
-
 if __name__ == '__main__':
+	parser = argparse.ArgumentParser(description='Key-frame detection program for extracting and retrieving important frames afrom long-duration videos.')
+	parser.add_argument('--video_path', help='Path to the video.')
+	parser.add_argument('--threshold', help='The threshold for frames comparations. The value should be in range 0.99-0.9999', default=0.99)
+	parser.add_argument('--time_interval', help='The time interval for generating the short videos from collected keyframe.', default=3)
+	parser.add_argument('--number-of-frames', help='The numbers of keyframes to collect.',default=4)
+	args = parser.parse_args()
 	ret = {}
 	images = {}
-	video_path = sys.argv[1]
-	threshold = float(sys.argv[2])
-	timeframe = int(sys.argv[3])
-	number_of_keyframe = sys.argv[4]
-	find_SURF_keypoint("test_img.png")
-	#find_general_keyframe()
-	for i,_ in sorted(ret.items(), key = lambda x: x[1] )[:4]:
+	video_path = args.video_path
+	threshold = float(args.threshold)
+	timeframe = int(args.time_interval)
+	number_of_keyframe = int(args.number_of_frames)
+	find_general_keyframe()
+	for i,_ in sorted(ret.items(), key = lambda x: x[1] )[:number_of_keyframe]:
 		cv2.imwrite('images'+str(i)+'.png',images[i])
 		get_short_video(i)
-# for i,v in enumerate(images):
  	
 
